@@ -1,12 +1,15 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, Headers } from '@nestjs/common';
 
-@Controller('first')
+@Controller('premier')
 export class FirstController {
 
-    @Get('')
-    testGet() {
-        console.log('GET');
-        return 'GET'
+    // premier/ayParam
+    @Get(':haja')
+    testGet(
+        @Param('haja') myParam
+    ) {
+        console.log({myParam});
+        return myParam
     }
     @Post('')
     testPost(

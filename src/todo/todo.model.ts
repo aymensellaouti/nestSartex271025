@@ -1,4 +1,5 @@
 
+import { v4 as uuidv4 } from 'uuid';
 export enum TodoStatusEnum {
     'actif' = "En cours",
     'waiting' = "En attente",
@@ -9,7 +10,7 @@ export enum TodoStatusEnum {
 export class TodoModel {
    
     constructor(
-        private id = 0,
+        private id = '',
         public name = '',
         public description = '',
         public createdAt = new Date(),
