@@ -1,0 +1,111 @@
+{
+	"info": {
+		"_postman_id": "32eba10e-56d6-4c1e-bff2-4c1dfec8967e",
+		"name": "sartex",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2394537"
+	},
+	"item": [
+		{
+			"name": "todo",
+			"item": [
+				{
+					"name": "getAll",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "get Todo By id",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/todo/ac59767d-682c-4613-bba5-cb294ee40ec5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"todo",
+								"ac59767d-682c-4613-bba5-cb294ee40ec5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add todo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"angular\",\r\n    \"description\": \"préparer les outils\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/todo",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"todo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update todo",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"angular\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/todo/d3e84195-67d9-4ae8-933c-b531645283b5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"todo",
+								"d3e84195-67d9-4ae8-933c-b531645283b5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Test",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
