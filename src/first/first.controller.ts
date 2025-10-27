@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Patch, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, Headers } from '@nestjs/common';
 
 @Controller('first')
 export class FirstController {
@@ -9,7 +9,14 @@ export class FirstController {
         return 'GET'
     }
     @Post('')
-    testPost() {
+    testPost(
+        @Body() body,
+        @Param() param,
+        @Query() query,
+        @Headers('host')  headers
+    ) {
+        console.log({body, param, query, headers});
+        
         console.log('Post');
         return 'Post'
     }
