@@ -2,6 +2,8 @@ import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, P
 import { TodoModel } from './todo.model';
 import { v4 as uuidv4 } from 'uuid';
 import { TodoControllerInterface } from './todo-controller.interface';
+import { AddTodoDto } from './dto/add-todo.dto';
+import { UpdateTodoDto } from './dto/update-todo.dto';
 @Controller('todo')
 export class TodoController implements TodoControllerInterface {
     private todos = [
@@ -29,9 +31,9 @@ export class TodoController implements TodoControllerInterface {
 
     @Post()
     addTodo(
-        @Body() todo
+        @Body() addTodoDto: AddTodoDto
     ): TodoModel {
-        const {name, description} = todo;
+        const {name, description} = addTodoDto;
         const newTod =  new TodoModel(uuidv4(), name, description)
         this.todos.push(newTod);
         return newTod;
@@ -39,15 +41,16 @@ export class TodoController implements TodoControllerInterface {
 
     @Patch(':id')
     updateTodo(
-        @Body() todo: Partial<TodoModel>,
+        @Body() updateTodoDto: UpdateTodoDto,
         @Param('id') id: string
     ): TodoModel {
-        console.log({todo});
+        
+        const {name, description, status} = updateTodoDto;
         const todoTodoUpdate = this.findTodoById(id);
         console.log({todoTodoUpdate});
-        todoTodoUpdate.name = todo.name ?? todoTodoUpdate.name;
-        todoTodoUpdate.description = todo.description ?? todoTodoUpdate.description;
-        todoTodoUpdate.status = todo.status ?? todoTodoUpdate.status;
+        todoTodoUpdate.name = name ?? todoTodoUpdate.name;
+        todoTodoUpdate.description = description ?? todoTodoUpdate.description;
+        todoTodoUpdate.status = status ?? todoTodoUpdate.status;
 
         return todoTodoUpdate;
     }
