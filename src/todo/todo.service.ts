@@ -1,12 +1,16 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { AddTodoDto } from './dto/add-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { TodoModel } from './todo.model';
-import { v4 as uuidv4 } from 'uuid';
+
 import { LoggerService } from '../common/logger.service';
+import { TOKEN_PROVIDERS } from '../config/token-provider.config';
 @Injectable()
 export class TodoService {
-    constructor(private logger: LoggerService) { }
+    constructor(
+        private logger: LoggerService,
+        @Inject(TOKEN_PROVIDERS.uuid) private  uuid: () => string
+    ) { }
     private todos = [
         //new TodoModel(uuidv4(), "NestJS", "faire l'exercice")
     ];
@@ -31,7 +35,7 @@ export class TodoService {
         addTodoDto: AddTodoDto
     ): TodoModel {
         const { name, description } = addTodoDto;
-        const newTod = new TodoModel(uuidv4(), name, description)
+        const newTod = new TodoModel(this.uuid(), name, description)
         this.todos.push(newTod);
         return newTod;
     }

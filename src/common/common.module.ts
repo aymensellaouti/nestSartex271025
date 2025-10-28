@@ -5,6 +5,7 @@ import { SayHelloService } from './sayHello.service';
 import { UtilsService } from './utils/utils.service';
 import { TOKEN_PROVIDERS } from '../config/token-provider.config';
 import { LANG_PROVIDER } from './providers/lang-config.provider';
+import { UUID_PROVIDER } from './providers/uuid.provider';
 
 @Global()
 @Module({
@@ -19,10 +20,13 @@ import { LANG_PROVIDER } from './providers/lang-config.provider';
     // }, 
     LANG_PROVIDER,
     SayHelloService, 
-    UtilsService],
+    UtilsService,
+    UUID_PROVIDER
+  ],
   exports: [
     LoggerService,SayHelloService,
-    LANG_PROVIDER
+    LANG_PROVIDER,
+    UUID_PROVIDER
 ]
 })
 export class CommonModule {}
