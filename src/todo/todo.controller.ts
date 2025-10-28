@@ -24,6 +24,9 @@ export class TodoController implements TodoControllerInterface {
     addTodo(
         @Body() addTodoDto: AddTodoDto
     ): TodoModel {
+        console.log({addTodoDto});
+        
+        console.log(addTodoDto instanceof AddTodoDto)
         return this.todoService.addTodo(addTodoDto);
     }
     @Patch(':id')
@@ -33,6 +36,7 @@ export class TodoController implements TodoControllerInterface {
         // Jibli el paramétre eli esmou id
         @Param('id') id: string
     ): TodoModel {
+        
        return this.todoService.updateTodo(id,updateTodoDto);
     }
 }
