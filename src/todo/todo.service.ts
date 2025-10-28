@@ -34,8 +34,8 @@ export class TodoService {
     addTodo(
         addTodoDto: AddTodoDto
     ): TodoModel {
-        const { name, description } = addTodoDto;
-        const newTod = new TodoModel(this.uuid(), name, description)
+        const { name, description, priority } = addTodoDto;
+        const newTod = new TodoModel(this.uuid(), name, description, priority)
         this.todos.push(newTod);
         return newTod;
     }

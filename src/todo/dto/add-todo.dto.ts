@@ -1,5 +1,6 @@
-import { IsNotEmpty, MaxLength, MinLength } from "class-validator";
+import { IsNotEmpty, IsNumber, MaxLength, MinLength } from "class-validator";
 import { ERROR_MESSAGES } from "../../config/error-messages.config";
+import { Type } from "class-transformer";
 
 export class AddTodoDto {
     @IsNotEmpty()
@@ -18,4 +19,8 @@ export class AddTodoDto {
         message: ERROR_MESSAGES.dto.minLength
     }) 
     description: string;
+    @IsNotEmpty()
+    @IsNumber()
+    @Type(() => Number)
+    priority: number;
 }

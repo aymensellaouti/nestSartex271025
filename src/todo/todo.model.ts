@@ -13,6 +13,7 @@ export class TodoModel {
         private id = '',
         public name = '',
         public description = '',
+        public priority = 0,
         public createdAt = new Date(),
         public status = TodoStatusEnum.waiting
     ) {

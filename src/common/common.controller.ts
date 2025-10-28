@@ -1,6 +1,7 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { LoggerService } from './logger.service';
 import { SayHelloService } from './sayHello.service';
+import { FusionPipe } from './pipes/fusion/fusion.pipe';
 
 @Controller('common')
 export class CommonController {
@@ -18,5 +19,11 @@ export class CommonController {
     hello() {
         this.sayHelloService.hello()
         return 'Testing Hello';
+    }
+    @Post('skills')
+    skills(
+        @Body('skills', FusionPipe) skills
+    ) {
+        return skills;
     }
 }
