@@ -1,8 +1,9 @@
-import { Injectable, LoggerService, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { AddTodoDto } from './dto/add-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { TodoModel } from './todo.model';
 import { v4 as uuidv4 } from 'uuid';
+import { LoggerService } from '../common/logger.service';
 @Injectable()
 export class TodoService {
     constructor(private logger: LoggerService) { }
