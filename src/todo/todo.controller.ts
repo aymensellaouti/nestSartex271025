@@ -4,15 +4,18 @@ import { v4 as uuidv4 } from 'uuid';
 import { TodoControllerInterface } from './todo-controller.interface';
 import { AddTodoDto } from './dto/add-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
+import { LoggerService } from '../common/logger.service';
 @Controller('todo')
 export class TodoController implements TodoControllerInterface {
+    constructor(private logger: LoggerService) {}
     private todos = [
         //new TodoModel(uuidv4(), "NestJS", "faire l'exercice")
     ];
 
     
-    @Get('all')
+    @Get('')
     getTodos(): TodoModel[] {
+        this.logger.log('Getting Todos');
         return this.todos;
     }
 
@@ -41,7 +44,9 @@ export class TodoController implements TodoControllerInterface {
 
     @Patch(':id')
     updateTodo(
+        // Jibli el Body el kol
         @Body() updateTodoDto: UpdateTodoDto,
+        // Jibli el paramétre eli esmou id
         @Param('id') id: string
     ): TodoModel {
         
