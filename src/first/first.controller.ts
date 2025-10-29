@@ -1,8 +1,15 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, Headers } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { Product } from './entity/product.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Controller('premier')
 export class FirstController {
 
+    constructor(
+        @InjectRepository(Product)
+        private productRepository: Repository<Product>
+    ) {}
     // premier/ayParam
     @Get(':haja')
     testGet(
