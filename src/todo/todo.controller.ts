@@ -1,10 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req } from '@nestjs/common';
 import { TodoModel } from './todo.model';
 
 import { TodoControllerInterface } from './todo-controller.interface';
 import { AddTodoDto } from './dto/add-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { TodoService } from './todo.service';
+import { Request } from 'express';
 @Controller('todo')
 export class TodoController implements TodoControllerInterface {
     constructor(private todoService: TodoService) {}
@@ -17,17 +18,20 @@ export class TodoController implements TodoControllerInterface {
         return this.todoService.getTestTodos(id);
     } 
     @Delete(':id')
-    deleteTodo(@Param('id') id: string): {count: number} {
-        return this.todoService.deleteTodo(id);    
+    deleteTodo(@Param('id') id: string,         
+    @Req() request: Request): {count: number} {
+        const userId = request['userId'];
+        return this.todoService.deleteTodo(id, userId);    
     }    
     @Post()
     addTodo(
-        @Body() addTodoDto: AddTodoDto
+        @Body() addTodoDto: AddTodoDto,
+        @Req() request: Request
     ): TodoModel {
-        console.log({addTodoDto});
-        
-        console.log(addTodoDto instanceof AddTodoDto)
-        return this.todoService.addTodo(addTodoDto);
+        //console.log({addTodoDto});
+        const userId = request['userId'];
+       // console.log(addTodoDto instanceof AddTodoDto)
+        return this.todoService.addTodo(addTodoDto, userId);
     }
     @Patch(':id')
     updateTodo(

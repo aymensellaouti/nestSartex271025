@@ -14,6 +14,7 @@ export class TodoModel {
         public name = '',
         public description = '',
         public priority = 0,
+        public userId = '',
         public createdAt = new Date(),
         public status = TodoStatusEnum.waiting
     ) {

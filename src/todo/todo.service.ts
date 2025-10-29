@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { AddTodoDto } from './dto/add-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { TodoModel } from './todo.model';
@@ -24,18 +24,22 @@ export class TodoService {
         return this.findTodoById(id);
     }
 
-    deleteTodo(id: string): { count: number } {
+    deleteTodo(id: string, userId: string): { count: number } {
         const index = this.todos.findIndex((todo) => todo.id == id);
         if (index == -1) return { count: 0 };
+        console.log({userIdIndex: this.todos[index].userId, userId});
+        
+        if (this.todos[index].userId != userId) throw new UnauthorizedException("MEch el todo mta3ek eta9i ellah")
         this.todos.splice(index, 1)
         return { count: 1 };
     }
 
     addTodo(
-        addTodoDto: AddTodoDto
+        addTodoDto: AddTodoDto,
+        userId: string
     ): TodoModel {
         const { name, description, priority } = addTodoDto;
-        const newTod = new TodoModel(this.uuid(), name, description, priority)
+        const newTod = new TodoModel(this.uuid(), name, description, priority, userId)
         this.todos.push(newTod);
         return newTod;
     }
