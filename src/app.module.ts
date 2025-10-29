@@ -9,6 +9,7 @@ import { CommonModule } from './common/common.module';
 import { FirstMiddleware } from './common/middleware/first/first.middleware';
 import { AuthMiddleware } from './common/middleware/auth/auth.middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Product } from './first/entity/product.entity';
 
 @Module({
   // Eli nest7a9ou 
@@ -17,11 +18,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     CommonModule,
     TypeOrmModule.forRoot({ 
       type: 'mysql', 
-      host: 'localhost', port: 3306, 
+      host: 'localhost', 
+      port: 3306, 
       username: 'root', 
       password: '', 
-      database: 'sartex', 
-      entities: [], 
+      database: 'sartex',
+      // La gestion des entités je la délégue lel module mta3ha 
+      autoLoadEntities: true, 
       synchronize: true, 
       logging: true
     })
