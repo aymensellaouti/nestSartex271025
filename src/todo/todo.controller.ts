@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseFilters } from '@nestjs/common';
 import { TodoModel } from './todo.model';
 
 import { TodoControllerInterface } from './todo-controller.interface';
@@ -6,10 +6,13 @@ import { AddTodoDto } from './dto/add-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { TodoService } from './todo.service';
 import { Request } from 'express';
+import { CustomFilter } from '../common/filter/custom.filter';
 @Controller('todo')
+//@UseFilters(CustomFilter)
 export class TodoController implements TodoControllerInterface {
     constructor(private todoService: TodoService) {}
     @Get('')
+    //@UseFilters(CustomFilter)
     getTodos(): TodoModel[] {
         return this.todoService.getTodos();
     }
