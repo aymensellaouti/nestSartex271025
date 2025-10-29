@@ -34,9 +34,12 @@ export class TodoDbController implements TodoControllerInterface {
     } 
     @Delete(':id')
     deleteTodo(@Param('id') id: string,         
-    @Req() request: Request): {count: number} {
-        const userId = request['userId'];
-        return this.todoService.deleteTodo(id, userId);    
+    @Req() request: Request): Promise<{count: number}> {
+        return this.todoDbService.deleteTodo(id);    
+    }     
+    @Patch('restore/:id')
+    restoreTodo(@Param('id') id: string): Promise<{count: number}> {
+        return this.todoDbService.restoreTodo(id);    
     }    
     @Post()
     addTodo(
@@ -50,8 +53,7 @@ export class TodoDbController implements TodoControllerInterface {
         @Body() updateTodoDto: UpdateTodoDbDto,
         // Jibli el paramétre eli esmou id
         @Param('id') id: string
-    ): TodoModel {
-        
-       return this.todoService.updateTodo(id,updateTodoDto);
+    ): Promise<TodoEntity> {  
+       return this.todoDbService.updateTodo(id,updateTodoDto);
     }
 }

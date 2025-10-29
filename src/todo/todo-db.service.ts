@@ -30,8 +30,21 @@ export class TodoDbService {
      * @param id : l'id du todo à supprimer
      * @returns 
      */
-    deleteTodo(id: string, userId: string): { count: number } {
-        return { count: 1 };
+    async deleteTodo(id: string): Promise<{ count: number }> {
+        const result = await this.todoRepository.softDelete(id);
+        if (result.affected == 0) throw new NotFoundException('Todo innexistant');
+        return {count: result.affected};
+    }
+
+    /**
+     * delete Todo en utilisant l'id
+     * @param id : l'id du todo à supprimer
+     * @returns 
+     */
+    async restoreTodo(id: string): Promise<{ count: number }> {
+        const result = await this.todoRepository.restore(id);
+        if (result.affected == 0) throw new NotFoundException('Todo innexistant');
+        return {count: result.affected};
     }
 
     addTodo(
@@ -40,12 +53,13 @@ export class TodoDbService {
        return this.todoRepository.save(addTodoDto);
     }
 
-    updateTodo(
+    async updateTodo(
         id: string,
         updateTodoDto: UpdateTodoDbDto,
-    ): TodoModel {
-        const todoTodoUpdate = this.findTodoById(id);
-        return todoTodoUpdate;
+    ): Promise<TodoEntity> {
+        const todo = await this.todoRepository.preload({id, ...updateTodoDto});
+        if (!todo) throw new NotFoundException('Todo innexistant');
+        return todo;
     }
 
     findTodoById(id: string): TodoModel {
