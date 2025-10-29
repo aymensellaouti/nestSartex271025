@@ -1,8 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 import { TodoStatusEnum } from "../todo.model";
+import { TimeStampEntity } from "../../common/db/timestamp.entity";
 
 @Entity('todo')
-export class TodoEntity {
+export class TodoEntity extends TimeStampEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
   @Column({
@@ -19,6 +20,5 @@ export class TodoEntity {
     default: TodoStatusEnum.waiting,
   })
   status: TodoStatusEnum;
-  @Column()
-  createdAt: Date = new Date();
+  
 }
