@@ -24,6 +24,12 @@ export class TodoService {
         return this.findTodoById(id);
     }
 
+    /**
+     * delete Todo en utilisant l'id
+     * @param id : l'id du todo à supprimer
+     * @param userId : l'id du user connecté
+     * @returns 
+     */
     deleteTodo(id: string, userId: string): { count: number } {
         const index = this.todos.findIndex((todo) => todo.id == id);
         if (index == -1) return { count: 0 };

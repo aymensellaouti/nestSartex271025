@@ -8,14 +8,21 @@ import { TodoService } from './todo.service';
 import { Request } from 'express';
 import { CustomFilter } from '../common/filter/custom.filter';
 import { ReponseFormaterInterceptor } from '../common/interceptors/reponse-formater/reponse-formater.interceptor';
+import { TodoDbService } from './todo-db.service';
+import { TodoEntity } from './entity/todo.entity';
+import { AddTodoDbDto } from './dto/add-todo-db.dto';
+import { UpdateTodoDbDto } from './dto/update-todo-db.dto';
 @Controller({
     path: 'todo',
-    version: '1'
+    version: '2'
 })
-@UseInterceptors(ReponseFormaterInterceptor)
+// @UseInterceptors(ReponseFormaterInterceptor)
 //@UseFilters(CustomFilter)
-export class TodoController implements TodoControllerInterface {
-    constructor(private todoService: TodoService) {}
+export class TodoDbController implements TodoControllerInterface {
+    constructor(
+        private todoService: TodoService,
+        private todoDbService: TodoDbService
+    ) {}
     @Get('')
     //@UseFilters(CustomFilter)
     getTodos(): TodoModel[] {
@@ -33,18 +40,14 @@ export class TodoController implements TodoControllerInterface {
     }    
     @Post()
     addTodo(
-        @Body() addTodoDto: AddTodoDto,
-        @Req() request: Request
-    ): TodoModel {
-        //console.log({addTodoDto});
-        const userId = request['userId'];
-       // console.log(addTodoDto instanceof AddTodoDto)
-        return this.todoService.addTodo(addTodoDto, userId);
+        @Body() addTodoDto: AddTodoDbDto,
+    ): Promise<TodoEntity> {
+        return this.todoDbService.addTodo(addTodoDto);
     }
     @Patch(':id')
     updateTodo(
         // Jibli el Body el kol
-        @Body() updateTodoDto: UpdateTodoDto,
+        @Body() updateTodoDto: UpdateTodoDbDto,
         // Jibli el paramétre eli esmou id
         @Param('id') id: string
     ): TodoModel {
