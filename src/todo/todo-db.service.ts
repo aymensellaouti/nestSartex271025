@@ -5,32 +5,33 @@ import { TodoModel } from './todo.model';
 
 import { LoggerService } from '../common/logger.service';
 import { TOKEN_PROVIDERS } from '../config/token-provider.config';
-import { ILike, Repository } from 'typeorm';
+import { Brackets, ILike, Repository } from 'typeorm';
 import { TodoEntity } from './entity/todo.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AddTodoDbDto } from './dto/add-todo-db.dto';
 import { UpdateTodoDbDto } from './dto/update-todo-db.dto';
 import { SearchTodoDto } from './dto/search-todos.dto';
+import { paginate } from '../common/db/db.utils';
 @Injectable()
 export class TodoDbService {
     constructor(
         @InjectRepository(TodoEntity)
         private todoRepository: Repository<TodoEntity>
     ) { }
-    
+
     /**
      * Retourne la liste des todos
      * @returns Promise<TodoEntity[]>
      */
-    getTodos(searchTodoDto: SearchTodoDto): Promise<TodoEntity[]>  {
+    getTodos(searchTodoDto: SearchTodoDto): Promise<TodoEntity[]> {
         const criterias = [];
-        const {search, status} = searchTodoDto;
+        const { search, status } = searchTodoDto;
         if (search) {
-            criterias.push({name: ILike(`%${search}%`)});
-            criterias.push({description: ILike(`%${search}%`)});
+            criterias.push({ name: ILike(`%${search}%`) });
+            criterias.push({ description: ILike(`%${search}%`) });
         }
         if (status) {
-            criterias.push({status});
+            criterias.push({ status });
         }
         if (criterias.length)
             return this.todoRepository.find({
@@ -40,7 +41,7 @@ export class TodoDbService {
     }
 
     async findTodoById(id: string): Promise<TodoEntity> {
-        const todo = await this.todoRepository.findOne({where:{id}});
+        const todo = await this.todoRepository.findOne({ where: { id } });
         if (!todo) throw new NotFoundException('Todo innexistant');
         return todo;
     }
@@ -58,7 +59,7 @@ export class TodoDbService {
     addTodo(
         addTodoDto: AddTodoDbDto,
     ): Promise<TodoEntity> {
-         return this.todoRepository.save(addTodoDto);
+        return this.todoRepository.save(addTodoDto);
     }
 
 
@@ -72,20 +73,20 @@ export class TodoDbService {
         id: string,
         updateTodoDto: UpdateTodoDbDto,
     ): Promise<TodoEntity> {
-        const todo = await this.todoRepository.preload({id, ...updateTodoDto});
+        const todo = await this.todoRepository.preload({ id, ...updateTodoDto });
         if (!todo) throw new NotFoundException('Todo innexistant');
         return this.todoRepository.save(todo);
     }
 
-        /**
-     * delete Todo en utilisant l'id
-     * @param id : l'id du todo à supprimer
-     * @returns 
-     */
+    /**
+ * delete Todo en utilisant l'id
+ * @param id : l'id du todo à supprimer
+ * @returns 
+ */
     async deleteTodo(id: string): Promise<{ count: number }> {
         const result = await this.todoRepository.softDelete(id);
         if (result.affected == 0) throw new NotFoundException('Todo innexistant');
-        return {count: result.affected};
+        return { count: result.affected };
     }
 
     /**
@@ -96,7 +97,35 @@ export class TodoDbService {
     async restoreTodo(id: string): Promise<{ count: number }> {
         const result = await this.todoRepository.restore(id);
         if (result.affected == 0) throw new NotFoundException('Todo innexistant');
-        return {count: result.affected};
+        return { count: result.affected };
+    }
+
+    /**
+     * Retourne la liste des todos
+     * @returns Promise<TodoEntity[]>
+     */
+    getTodosQB(searchTodoDto: SearchTodoDto): Promise<TodoEntity[]> {
+        const { search, status, page, numberPerPage } = searchTodoDto;
+        const qb = this.todoRepository.createQueryBuilder('t');
+        
+        if (status) {
+            qb.where('t.status = :status', { status: status });
+        }
+        if (search) {
+            qb.andWhere(
+                new Brackets((qb) => {
+                    qb.where(`t.name like :name`, { name: `%${search}%` })
+                        .orWhere(
+                            `t.description like :description`,
+                            { description: `%${search}%` },
+                        );
+                }),
+            );
+        }
+
+        if (page && numberPerPage)
+            paginate<TodoEntity>(qb,page,numberPerPage);
+        return qb.getMany();
     }
 
 
