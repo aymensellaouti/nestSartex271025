@@ -18,7 +18,7 @@ export class Cv extends TimeStampEntity {
     @ManyToOne(() => User)
     user: User;
 
-    @ManyToMany(() => Skill, skill => skill.cvs)
+    @ManyToMany(() => Skill, skill => skill.cvs, {eager: true})
     @JoinTable({
         name: 'cv_skills',
         joinColumn: {
