@@ -13,6 +13,7 @@ import { Product } from './first/entity/product.entity';
 import { CvModule } from './cv/cv.module';
 import { SkillModule } from './skill/skill.module';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   // Eli nest7a9ou 
@@ -33,7 +34,8 @@ import { UserModule } from './user/user.module';
     }),
     CvModule,
     SkillModule,
-    UserModule
+    UserModule,
+    AuthModule
   ],
   // 
   controllers: [AppController],
