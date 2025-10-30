@@ -1,16 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, SetMetadata } from '@nestjs/common';
 import { CvService } from './cv.service';
 import { CreateCvDto } from './dto/create-cv.dto';
 import { UpdateCvDto } from './dto/update-cv.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../auth/get-user.param-decorator';
 import { User } from '../user/entities/user.entity';
+import { Roles } from '../auth/decorator/role.decorator';
+import { RoleGuard } from '../auth/guards/role.guard';
 
 @Controller('cv')
+@Roles('admin')
 export class CvController {
   constructor(private readonly cvService: CvService) {}
 
   @Post()
+  @UseGuards(RoleGuard)
   @UseGuards(AuthGuard('jwt'))
   create(
     @Body() createCvDto: CreateCvDto,
@@ -20,6 +24,7 @@ export class CvController {
   }
 
   @Get()
+  @Roles('user')
   findAll() {
     return this.cvService.findAll();
   }

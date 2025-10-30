@@ -22,4 +22,11 @@ export class User extends TimeStampEntity {
   @Column()
   password: string;
 
+  @Column({
+    type: 'enum',
+    enum: UserRoleEnum,
+    default: UserRoleEnum.user,
+  })
+  role: UserRoleEnum;
+
 }
