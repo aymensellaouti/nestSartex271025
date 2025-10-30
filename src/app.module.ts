@@ -10,6 +10,9 @@ import { FirstMiddleware } from './common/middleware/first/first.middleware';
 import { AuthMiddleware } from './common/middleware/auth/auth.middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './first/entity/product.entity';
+import { CvModule } from './cv/cv.module';
+import { SkillModule } from './skill/skill.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   // Eli nest7a9ou 
@@ -27,7 +30,10 @@ import { Product } from './first/entity/product.entity';
       autoLoadEntities: true, 
       synchronize: true, 
       logging: true
-    })
+    }),
+    CvModule,
+    SkillModule,
+    UserModule
   ],
   // 
   controllers: [AppController],
