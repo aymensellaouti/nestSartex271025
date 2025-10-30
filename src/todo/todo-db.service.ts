@@ -11,7 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { AddTodoDbDto } from './dto/add-todo-db.dto';
 import { UpdateTodoDbDto } from './dto/update-todo-db.dto';
 import { SearchTodoDto } from './dto/search-todos.dto';
-import { paginate } from '../common/db/db.utils';
+import { filterByDate, paginate } from '../common/db/db.utils';
 @Injectable()
 export class TodoDbService {
     constructor(
@@ -105,7 +105,7 @@ export class TodoDbService {
      * @returns Promise<TodoEntity[]>
      */
     getTodosQB(searchTodoDto: SearchTodoDto): Promise<TodoEntity[]> {
-        const { search, status, page, numberPerPage } = searchTodoDto;
+        const { search, status, page, numberPerPage, minDate, maxDate } = searchTodoDto;
         const qb = this.todoRepository.createQueryBuilder('t');
         
         if (status) {
@@ -125,7 +125,8 @@ export class TodoDbService {
 
         if (page && numberPerPage)
             paginate<TodoEntity>(qb,page,numberPerPage);
-        return qb.getMany();
+        
+        return filterByDate(qb, 'created_at', minDate, maxDate).getMany();
     }
 
 

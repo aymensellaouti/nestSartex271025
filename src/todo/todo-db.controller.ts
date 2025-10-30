@@ -23,7 +23,7 @@ export class TodoDbController {
     getTodos(
         @Query() searchTodoDto: SearchTodoDto
     ): Promise<TodoEntity[]> {
-        return this.todoDbService.getTodos(searchTodoDto);
+        return this.todoDbService.getTodosQB(searchTodoDto);
     }
     // To update using DB    
     @Get(':id')
