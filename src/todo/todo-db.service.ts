@@ -39,9 +39,15 @@ export class TodoDbService {
         return this.todoRepository.find();
     }
 
-    getTestTodos(id: string): TodoModel {
-        return this.findTodoById(id);
+    async findTodoById(id: string): Promise<TodoEntity> {
+        const todo = await this.todoRepository.findOne({where:{id}});
+        if (!todo) throw new NotFoundException('Todo innexistant');
+        return todo;
     }
+
+    // getTestTodos(id: string): TodoModel {
+    //     return this.findTodoById(id);
+    // }
 
 
     /**
@@ -93,9 +99,5 @@ export class TodoDbService {
         return {count: result.affected};
     }
 
-    findTodoById(id: string): TodoModel {
-        const todo = [].find((todo) => todo.id == id);
-        if (!todo) throw new NotFoundException('Todo innexistant');
-        return todo;
-    }
+
 }

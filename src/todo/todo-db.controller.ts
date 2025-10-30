@@ -27,8 +27,8 @@ export class TodoDbController {
     }
     // To update using DB    
     @Get(':id')
-    getTestTodos(@Param('id') id: string): TodoModel {
-        return this.todoDbService.getTestTodos(id);
+    getTodoById(@Param('id') id: string): Promise<TodoEntity> {
+        return this.todoDbService.findTodoById(id);
     } 
     @Delete(':id')
     deleteTodo(@Param('id') id: string,         
