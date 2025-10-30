@@ -17,15 +17,48 @@ export class TodoDbService {
         private todoRepository: Repository<TodoEntity>
     ) { }
     
-    getTodos(): TodoModel[] {
-       return []
+    /**
+     * Retourne la liste des todos
+     * @returns Promise<TodoEntity[]>
+     */
+    getTodos(): Promise<TodoEntity[]>  {
+
+       return this.todoRepository.find()
     }
 
     getTestTodos(id: string): TodoModel {
         return this.findTodoById(id);
     }
 
+
     /**
+     * Ajoute un todo
+     * @param addTodoDto 
+     * @returns Promise<TodoEntity>
+     */
+    addTodo(
+        addTodoDto: AddTodoDbDto,
+    ): Promise<TodoEntity> {
+       return this.todoRepository.save(addTodoDto);
+    }
+
+
+    /**
+     * met à a jour un todo
+     * @param id 
+     * @param updateTodoDto 
+     * @returns Promise<TodoEntity>
+     */
+    async updateTodo(
+        id: string,
+        updateTodoDto: UpdateTodoDbDto,
+    ): Promise<TodoEntity> {
+        const todo = await this.todoRepository.preload({id, ...updateTodoDto});
+        if (!todo) throw new NotFoundException('Todo innexistant');
+        return todo;
+    }
+
+        /**
      * delete Todo en utilisant l'id
      * @param id : l'id du todo à supprimer
      * @returns 
@@ -45,21 +78,6 @@ export class TodoDbService {
         const result = await this.todoRepository.restore(id);
         if (result.affected == 0) throw new NotFoundException('Todo innexistant');
         return {count: result.affected};
-    }
-
-    addTodo(
-        addTodoDto: AddTodoDbDto,
-    ): Promise<TodoEntity> {
-       return this.todoRepository.save(addTodoDto);
-    }
-
-    async updateTodo(
-        id: string,
-        updateTodoDto: UpdateTodoDbDto,
-    ): Promise<TodoEntity> {
-        const todo = await this.todoRepository.preload({id, ...updateTodoDto});
-        if (!todo) throw new NotFoundException('Todo innexistant');
-        return todo;
     }
 
     findTodoById(id: string): TodoModel {
