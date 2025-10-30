@@ -107,7 +107,7 @@ export class TodoDbService {
     getTodosQB(searchTodoDto: SearchTodoDto): Promise<TodoEntity[]> {
         const { search, status, page, numberPerPage, minDate, maxDate } = searchTodoDto;
         const qb = this.todoRepository.createQueryBuilder('t');
-        
+
         if (status) {
             qb.where('t.status = :status', { status: status });
         }
@@ -124,8 +124,8 @@ export class TodoDbService {
         }
 
         if (page && numberPerPage)
-            paginate<TodoEntity>(qb,page,numberPerPage);
-        
+            paginate<TodoEntity>(qb, page, numberPerPage);
+
         return filterByDate(qb, 'created_at', minDate, maxDate).getMany();
     }
 
