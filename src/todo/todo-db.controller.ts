@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req } from '@nestjs/common';
 import { TodoModel } from './todo.model';
 
 import { Request } from 'express';
@@ -6,6 +6,7 @@ import { TodoDbService } from './todo-db.service';
 import { TodoEntity } from './entity/todo.entity';
 import { AddTodoDbDto } from './dto/add-todo-db.dto';
 import { UpdateTodoDbDto } from './dto/update-todo-db.dto';
+import { SearchTodoDto } from './dto/search-todos.dto';
 @Controller({
     path: 'todo',
     version: '2'
@@ -19,8 +20,10 @@ export class TodoDbController {
     // To update using DB
     @Get('')
     //@UseFilters(CustomFilter)
-    getTodos(): Promise<TodoEntity[]> {
-        return this.todoDbService.getTodos();
+    getTodos(
+        @Query() searchTodoDto: SearchTodoDto
+    ): Promise<TodoEntity[]> {
+        return this.todoDbService.getTodos(searchTodoDto);
     }
     // To update using DB    
     @Get(':id')

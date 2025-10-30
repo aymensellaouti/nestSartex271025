@@ -5,11 +5,12 @@ import { TodoModel } from './todo.model';
 
 import { LoggerService } from '../common/logger.service';
 import { TOKEN_PROVIDERS } from '../config/token-provider.config';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { TodoEntity } from './entity/todo.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AddTodoDbDto } from './dto/add-todo-db.dto';
 import { UpdateTodoDbDto } from './dto/update-todo-db.dto';
+import { SearchTodoDto } from './dto/search-todos.dto';
 @Injectable()
 export class TodoDbService {
     constructor(
@@ -21,9 +22,21 @@ export class TodoDbService {
      * Retourne la liste des todos
      * @returns Promise<TodoEntity[]>
      */
-    getTodos(): Promise<TodoEntity[]>  {
-
-       return this.todoRepository.find()
+    getTodos(searchTodoDto: SearchTodoDto): Promise<TodoEntity[]>  {
+        const criterias = [];
+        const {search, status} = searchTodoDto;
+        if (search) {
+            criterias.push({name: ILike(`%${search}%`)});
+            criterias.push({description: ILike(`%${search}%`)});
+        }
+        if (status) {
+            criterias.push({status});
+        }
+        if (criterias.length)
+            return this.todoRepository.find({
+                where: criterias
+            })
+        return this.todoRepository.find();
     }
 
     getTestTodos(id: string): TodoModel {
@@ -55,7 +68,7 @@ export class TodoDbService {
     ): Promise<TodoEntity> {
         const todo = await this.todoRepository.preload({id, ...updateTodoDto});
         if (!todo) throw new NotFoundException('Todo innexistant');
-        return todo;
+        return this.todoRepository.save(todo);
     }
 
         /**
